@@ -37,10 +37,39 @@ public class Dados {
             while (rs.next()) {
 
                 Estado e = new Estado();
-                e.setId(0);
-                e.setNome("nome");
-                e.setSigla("sigla");
+                e.setId(rs.getInt("id"));
+                e.setNome(rs.getString("nome"));
+                e.setSigla(rs.getString("sigla"));
                 lista.add(e);
+            }
+            c.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(Dados.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return lista;
+    }
+
+    public List<Cidade> getCidade(int idEstado) {
+        List<Cidade> lista;
+        lista = new ArrayList();
+
+        try {
+
+            Connection c = DriverManager.getConnection("jdbc:sqlite:bancocidades.db");
+            Statement stm = c.createStatement();
+
+            String sql = "SELECT  * FROM CIDADE WHERE ESTADO_ID = ";
+            sql += String.valueOf(idEstado);
+            
+            PreparedStatement pstm = c.prepareStatement(sql);
+            ResultSet rs = pstm.executeQuery();
+            while (rs.next()) {
+
+                Cidade city = new Cidade();
+                city.setId(rs.getInt("id"));
+                city.setNome(rs.getString("nome"));
+                city.setIdEstado(rs.getInt("estado_id"));
+                lista.add(city);
             }
             c.close();
         } catch (SQLException ex) {

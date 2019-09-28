@@ -31,6 +31,8 @@ public class CidadeEstado extends javax.swing.JFrame {
                 cmbEstado.addItem(ListaEstados.get(i).getNome());;
 
         }
+        
+       
 
     }
 
@@ -95,24 +97,14 @@ public class CidadeEstado extends javax.swing.JFrame {
 
     private void cmbEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbEstadoActionPerformed
         cmbCidade.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{""}));
-        Connection c;
-        try {
-            c = DriverManager.getConnection("jdbc:sqlite:bancocidades.db");
-            Statement stm = c.createStatement();
+         Dados dados = new Dados();
 
-            String sql = "SELECT  * FROM CIDADE WHERE ESTADO_ID = ";
-            sql += String.valueOf(cmbEstado.getSelectedIndex());
+        List<Cidade> ListaCidade = dados.getCidade(cmbEstado.getSelectedIndex());
+        for (int i = 0; i < ListaCidade.size(); i++) {
+                cmbCidade.addItem(ListaCidade.get(i).getNome());;
 
-            PreparedStatement pstm = c.prepareStatement(sql);
-            ResultSet rs = pstm.executeQuery();
-
-            while (rs.next()) {
-                cmbCidade.addItem(rs.getString("NOME"));
-            }
-            c.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(CidadeEstado.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
     }//GEN-LAST:event_cmbEstadoActionPerformed
 
     /**
