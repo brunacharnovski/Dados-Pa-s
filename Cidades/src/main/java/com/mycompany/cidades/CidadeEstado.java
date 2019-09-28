@@ -6,6 +6,7 @@
 package com.mycompany.cidades;
 
 import java.sql.*;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,20 +21,15 @@ public class CidadeEstado extends javax.swing.JFrame {
      */
     public CidadeEstado() {
         initComponents();
-        cmbEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {""}));
+        cmbEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{""}));
         Connection c;
-        try {
-            c = DriverManager.getConnection("jdbc:sqlite:bancocidades.db");
-            Statement stm = c.createStatement();
-            String sql = "SELECT  * FROM ESTADO";
-            PreparedStatement pstm = c.prepareStatement(sql);
-            ResultSet rs = pstm.executeQuery();
-            while (rs.next()){
-                cmbEstado.addItem(rs.getString("NOME"));
-            }
-        c.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(CidadeEstado.class.getName()).log(Level.SEVERE, null, ex);
+
+        Dados dados = new Dados();
+
+        List<Estado> ListaEstados = dados.getEstados();
+        for (int i = 0; i < ListaEstados.size(); i++) {
+                cmbEstado.addItem(ListaEstados.get(i).getNome());;
+
         }
 
     }
@@ -98,22 +94,22 @@ public class CidadeEstado extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cmbEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbEstadoActionPerformed
-        cmbCidade.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {""}));
+        cmbCidade.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{""}));
         Connection c;
         try {
             c = DriverManager.getConnection("jdbc:sqlite:bancocidades.db");
             Statement stm = c.createStatement();
-            
+
             String sql = "SELECT  * FROM CIDADE WHERE ESTADO_ID = ";
             sql += String.valueOf(cmbEstado.getSelectedIndex());
-            
+
             PreparedStatement pstm = c.prepareStatement(sql);
             ResultSet rs = pstm.executeQuery();
-            
-            while (rs.next()){
+
+            while (rs.next()) {
                 cmbCidade.addItem(rs.getString("NOME"));
             }
-        c.close();
+            c.close();
         } catch (SQLException ex) {
             Logger.getLogger(CidadeEstado.class.getName()).log(Level.SEVERE, null, ex);
         }
